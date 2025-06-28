@@ -1607,13 +1607,13 @@ class PlayState extends MusicBeatState
 				bgZoom = 0.3;
 				stageName = 'on a kickass airplane';
 
-				var sky:BGSprite = new BGSprite('bg', -3000, -1800, Paths.image('backgrounds/fish/octopus'), null, 0.6, 0.6);
+				var sky:BGSprite = new BGSprite('sky', -3000, -1800, Paths.image('backgrounds/fish/octopus'), null, 0.6, 0.6);
 				sprites.add(sky);
 				sky.width = 4;
 				sky.height = 4;
 				add(sky);
 				
-				var plane:BGSprite = new BGSprite('stageHills', -834, -159, Paths.image('backgrounds/dave-house/${assetType}hills'), null, 0.7, 0.7);
+				var plane:BGSprite = new BGSprite('plane', -9000, -2470, Paths.image('backgrounds/fish/bird'), null, 0.7, 0.7);
 				sprites.add(plane);
 				plane.width = 10;
 				plane.height = 10;

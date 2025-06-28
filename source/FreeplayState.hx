@@ -76,12 +76,14 @@ class FreeplayState extends MusicBeatState
 		0xFF119A2B,    // CHEATING
 		0xFFFF0000,    // UNFAIRNESS
 		0xFF810000,    // EXPLOITATION
+		FlxColor.fromRGB(255, 51, 125),    // GLITCH.SMH
     ];
 	public static var skipSelect:Array<String> = 
 	[
 		'five-nights',
 		'vs-dave-rap',
-		'vs-dave-rap-two'
+		'vs-dave-rap-two',
+		'escape-from-poland'
 	];
 
 	public static var noExtraKeys:Array<String> = 
@@ -89,7 +91,8 @@ class FreeplayState extends MusicBeatState
 		'five-nights',
 		'vs-dave-rap',
 		'vs-dave-rap-two',
-		'overdrive'
+		'overdrive',
+		'escape-from-poland'
 	];
 
 	private var camFollow:FlxObject;
@@ -264,10 +267,8 @@ class FreeplayState extends MusicBeatState
 	{
 		switch (Catagories[CurrentPack].toLowerCase())
 		{
-			case 'joke':
-				addWeek(['Unfairness'], 15, ['bambi-unfair']);
-				if (FlxG.save.data.cozenFound)
-					addWeek(['cozen'], 15, ['bambi-unfair']);
+			case 'extra':
+				addWeek(['Escape-From-Poland'], 17, ['Glitch']);
 		}
 	}
 

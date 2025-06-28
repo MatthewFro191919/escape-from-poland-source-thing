@@ -3,6 +3,8 @@ package;
 #if desktop
 import sys.FileSystem;
 #end
+import flixel.util.FlxSort;
+import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.addons.effects.chainable.FlxEffectSprite;
@@ -10,6 +12,9 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
+import openfl.utils.AssetType;
+import openfl.utils.Assets;
+import haxe.Json;
 
 using StringTools;
 
@@ -78,6 +83,25 @@ class Character extends FlxSprite
 				skins.set('3d', 'bf-3d');
 
 				barColor = FlxColor.fromRGB(49, 176, 209);
+
+				playAnim('idle');
+
+				nativelyPlayable = true;
+
+				flipX = true;
+			case 'Glitch':
+				frames = FlxAtlasFrames('characters/Glitch', 'shared');
+				
+				animation.addByPrefix('idle', 'Anims/Idle-Forward', 24, false);
+				animation.addByPrefix('singUP', 'Anims/Up-Sing', 24, false);
+				animation.addByPrefix('singLEFT', 'Anims/Left-Sing', 24, false);
+				animation.addByPrefix('singRIGHT', 'Anims/Right-Sing', 24, false);
+				animation.addByPrefix('singDOWN', 'Anims/Down-Sing', 24, false);
+
+				loadOffsetFile(curCharacter);
+
+				globalOffset = [-60, 350];
+				barColor = FlxColor.fromRGB(255, 51, 125);
 
 				playAnim('idle');
 
@@ -1166,8 +1190,128 @@ class Character extends FlxSprite
 		}
 	}
 
+	// Atlas support
+	// special thanks ne_eo for the references, you're the goat!!
+	public var isAnimateAtlas(default, null):Bool = false;
+	#if flxanimate
+	public var atlas:FlxAnimate;
+	public override function draw()
+	{
+		var lastAlpha:Float = alpha;
+		var lastColor:FlxColor = color;
+		if(missingCharacter)
+		{
+			alpha *= 0.6;
+			color = FlxColor.BLACK;
+		}
+
+		if(isAnimateAtlas)
+		{
+			if(atlas.anim.curInstance != null)
+			{
+				copyAtlasValues();
+				atlas.draw();
+				alpha = lastAlpha;
+				color = lastColor;
+				if(missingCharacter && visible)
+				{
+					missingText.x = getMidpoint().x - 150;
+					missingText.y = getMidpoint().y - 10;
+					missingText.draw();
+				}
+			}
+			return;
+		}
+		super.draw();
+		if(missingCharacter && visible)
+		{
+			alpha = lastAlpha;
+			color = lastColor;
+			missingText.x = getMidpoint().x - 150;
+			missingText.y = getMidpoint().y - 10;
+			missingText.draw();
+		}
+	}
+
+	public function copyAtlasValues()
+	{
+		@:privateAccess
+		{
+			atlas.cameras = cameras;
+			atlas.scrollFactor = scrollFactor;
+			atlas.scale = scale;
+			atlas.offset = offset;
+			atlas.origin = origin;
+			atlas.x = x;
+			atlas.y = y;
+			atlas.angle = angle;
+			atlas.alpha = alpha;
+			atlas.visible = visible;
+			atlas.flipX = flipX;
+			atlas.flipY = flipY;
+			atlas.shader = shader;
+			atlas.antialiasing = antialiasing;
+			atlas.colorTransform = colorTransform;
+			atlas.color = color;
+		}
+	}
+
+	public override function destroy()
+	{
+		atlas = FlxDestroyUtil.destroy(atlas);
+		super.destroy();
+	}
+	#end
+
+	public var animPaused(get, set):Bool;
+	private function get_animPaused():Bool
+	{
+		if(isAnimationNull()) return false;
+		return !isAnimateAtlas ? animation.curAnim.paused : atlas.anim.isPlaying;
+	}
+	private function set_animPaused(value:Bool):Bool
+	{
+		if(isAnimationNull()) return value;
+		if(!isAnimateAtlas) animation.curAnim.paused = value;
+		else
+		{
+			if(value) atlas.pauseAnimation();
+			else atlas.resumeAnimation();
+		}
+
+		return value;
+	}
+
+	public function isAnimationFinished():Bool
+	{
+		if(isAnimationNull()) return false;
+		return !isAnimateAtlas ? animation.curAnim.finished : atlas.anim.finished;
+	}
+
+	public function finishAnimation():Void
+	{
+		if(isAnimationNull()) return;
+
+		if(!isAnimateAtlas) animation.curAnim.finish();
+		else atlas.anim.curFrame = atlas.anim.length - 1;
+	}
+
+
+	inline public function isAnimationNull():Bool
+	{
+		return !isAnimateAtlas ? (animation.curAnim == null) : (atlas.anim.curInstance == null || atlas.anim.curSymbol == null);
+	}
+
 	override function update(elapsed:Float)
 	{
+		if(isAnimateAtlas) atlas.update(elapsed);
+
+		if(debugMode || (!isAnimateAtlas && animation.curAnim == null) || (isAnimateAtlas && (atlas.anim.curInstance == null || atlas.anim.curSymbol == null)))
+		{
+			super.update(elapsed);
+			return;
+		}
+
 		if (animation == null)
 		{
 			super.update(elapsed);

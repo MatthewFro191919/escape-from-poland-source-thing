@@ -1603,7 +1603,10 @@ class PlayState extends MusicBeatState
 				sprites.add(bg);
 				add(bg);
 
-			case 'inside-house':
+			case 'on a kickass airplane':
+				bgZoom = 0.3;
+				stageName = 'on a kickass airplane';
+
 				var sky:BGSprite = new BGSprite('bg', -3000, -1800, Paths.image('backgrounds/fish/octopus'), null, 0.6, 0.6);
 				sprites.add(sky);
 				sky.width = 4;

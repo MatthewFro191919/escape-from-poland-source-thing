@@ -90,7 +90,7 @@ class Character extends FlxSprite
 
 				flipX = true;
 			case 'Glitch':
-				frames = FlxAtlasFrames('characters/Glitch', 'shared');
+				frames = Paths.getMultiAtlas('characters/Glitch', 'shared');
 				
 				animation.addByPrefix('idle', 'Anims/Idle-Forward', 24, false);
 				animation.addByPrefix('singUP', 'Anims/Up-Sing', 24, false);
@@ -102,6 +102,25 @@ class Character extends FlxSprite
 
 				globalOffset = [-60, 350];
 				barColor = FlxColor.fromRGB(255, 51, 125);
+
+				playAnim('idle');
+
+				nativelyPlayable = false;
+
+				flipX = true;
+			case 'Issac':
+				frames = Paths.getSparrowAtlas('characters/issac', 'shared');
+				
+				animation.addByPrefix('idle', 'Idle', 24, false);
+				animation.addByPrefix('singUP', 'Sing_Up', 24, false);
+				animation.addByPrefix('singLEFT', 'Sing_Left', 24, false);
+				animation.addByPrefix('singRIGHT', 'Sing_Right', 24, false);
+				animation.addByPrefix('singDOWN', 'Sing_Down', 24, false);
+
+				loadOffsetFile(curCharacter);
+
+				globalOffset = [0, 350];
+				barColor = FlxColor.fromRGB(0, 204, 255);
 
 				playAnim('idle');
 

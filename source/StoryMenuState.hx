@@ -22,7 +22,7 @@ import flixel.util.FlxTimer;
 import Discord.DiscordClient;
 #end
 
-import hxcodec.VideoHandler;
+import vlc.MP4Handler;
 
 using StringTools;
 

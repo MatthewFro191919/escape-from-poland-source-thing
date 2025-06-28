@@ -11,7 +11,7 @@ haxelib install flixel-addons 2.11.0
 haxelib install flixel-tools
 haxelib install flixel-ui 2.6.1
 haxelib install actuate 1.9.0 
-haxelib install hxCodec 2.5.1          
+haxelib git hxCodec https://github.com/JuniorNovoa1/hxCodec-2.5.1-MacOS-Support
 haxelib install linc_luajit
 haxelib install hscript
 haxelib git hscript-ex https://github.com/ianharrigan/hscript-ex

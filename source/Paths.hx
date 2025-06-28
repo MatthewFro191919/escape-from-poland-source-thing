@@ -231,17 +231,14 @@ class Paths
 	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
 	{
 		
-		var parentFrames:FlxAtlasFrames = Paths.getAtlas(keys[0].trim());
+		var parentFrames:FlxAtlasFrames = Paths.getAtlas(keys[0]());
 		if(keys.length > 1)
 		{
 			var original:FlxAtlasFrames = parentFrames;
 			parentFrames = new FlxAtlasFrames(parentFrames.parent);
-			parentFrames.addAtlas(original, true);
 			for (i in 1...keys.length)
 			{
-				var extraFrames:FlxAtlasFrames = Paths.getAtlas(keys[i].trim(), parentFolder, allowGPU);
-				if(extraFrames != null)
-					parentFrames.addAtlas(extraFrames, true);
+				var extraFrames:FlxAtlasFrames = Paths.getAtlas(keys[i](), parentFolder, allowGPU);
 			}
 		}
 		return parentFrames;

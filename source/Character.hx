@@ -40,6 +40,8 @@ class Character extends FlxSprite
 	public var canSing:Bool = true;
 	public var skins:Map<String, String> = new Map<String, String>();
 
+	public var atlas:FlxAnimate;
+	
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		super(x, y);
